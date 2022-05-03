@@ -1,15 +1,14 @@
 package jpabook.jpashop.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
     변수는 카멜을 쓰나, db는 언더스코어를 사용하므로 애매한 거만 컬럼 어노테이션으로 매핑하기
  */
 @Entity
-public class Member {
+public class Member extends BaseEntity {
     @Id @GeneratedValue       //@GeneratedValue는 기본 auto임.
     @Column(name = "MEMBER_ID")    //소문자든 대문자든 회사 내규에 따르셈.
     private Long id;
@@ -22,6 +21,13 @@ public class Member {
     private String city;
     private String street;
     private String zipcode;
+
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
+    /*
+        orders랑 orderItem 없어도 됨.
+        단방향 설계가 제일 중요해!
+     */
 
     public Long getId() {        //getter는 꼭 만들고, setter의 경우 많이 만들면 유지보수성이 떨어지니 주의할 것.
         return id;

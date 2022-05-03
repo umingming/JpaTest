@@ -1,6 +1,9 @@
 package jpabook.jpashop;
 
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Movie;
+import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderItem;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -34,9 +37,25 @@ public class JpaMain {
                 -참조가 없으므로 UML도 잘못됨.
                 => 이 문제들을 연관 관계 매핑으로 해결할 수 있음! 짱
              */
-            Member member = new Member();
-            member.setName("유밍3");
-            em.persist(member);
+//            Member member = new Member();
+//            member.setName("유밍3");
+//            em.persist(member);
+
+//            Order order = new Order();
+//            order.addOrderItem(new OrderItem());
+//            em.persist(order);
+            /*
+                양방향 연관 관계는 개발상의 편의를 위해서임.
+                단방향으로 다 된다!
+                Order order = new Order();
+                em.persist(order);
+                OrderItem orderItem = new OrderItem();
+                orderItem.setOrder(order);
+                em.persist(orderItem);
+             */
+            Movie movie = new Movie();
+            movie.setName("바람과 사라져라");
+            em.persist(movie);
             tx.commit();
         } catch (Exception e){
             tx.rollback();

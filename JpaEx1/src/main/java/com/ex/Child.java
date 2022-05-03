@@ -1,21 +1,27 @@
 package com.ex;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Product {
+public class Child {
     @Id
     @GeneratedValue
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "products")
-    private List<Member> members = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Parent parent;
+
+    public Parent getParent() {
+        return parent;
+    }
+
+    public void setParent(Parent parent) {
+        this.parent = parent;
+    }
 
     public Long getId() {
         return id;

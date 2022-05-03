@@ -3,19 +3,25 @@ package com.ex;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Product {
+public class Parent {
     @Id
     @GeneratedValue
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "products")
-    private List<Member> members = new ArrayList<>();
+    @OneToMany(mappedBy = "parent")
+    private List<Child> childList = new ArrayList<>();
+
+    //연관관계 편의 메소드
+    public void addChild(Child child){
+        childList.add(child);
+        child.setParent(this);
+    }
 
     public Long getId() {
         return id;
@@ -31,5 +37,13 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Child> getChildList() {
+        return childList;
+    }
+
+    public void setChildList(List<Child> childList) {
+        this.childList = childList;
     }
 }

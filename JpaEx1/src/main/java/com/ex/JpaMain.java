@@ -66,6 +66,16 @@ public class JpaMain {
 //            member.setUsername("member1");
 //            member.setTeam(team);
 //            em.persist(member);
+
+
+            Member member = new Member();
+            member.setUsername("member1");
+            em.persist(member);
+
+            Team team = new Team();
+            team.setName("TeamA");
+            team.getMembers().add(member);
+            em.persist(team);
 //
 //            em.flush();                    //이걸 해줘야 DB에서 깔끔하게 값을 가져 옴.
 //            em.clear();
@@ -94,29 +104,29 @@ public class JpaMain {
 //            em.persist(team);
 //
             // JPA 입장에서 제대로된 코드로 member에 팀 값이 들어감.
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
-
-            Member member = new Member();
-            member.setUsername("member1");
-            member.changeTeam(team);   //add와 깜빡깜빡할 수 있음 -> 연관관계 편의 메소드를 만들자!
-            em.persist(member);
+//            Team team = new Team();
+//            team.setName("TeamA");
+//            em.persist(team);
+//
+//            Member member = new Member();
+//            member.setUsername("member1");
+//            member.changeTeam(team);   //add와 깜빡깜빡할 수 있음 -> 연관관계 편의 메소드를 만들자!
+//            em.persist(member);
 
             // 이걸 changeTeam에 추가하면 없어도 알아서 돌아가는 거임! 짱짱
 
 //            em.flush();
 //            em.clear();     //얘네 없으면 컬렉션에 값이 없어서 select 쿼리 안 날라감.
 
-            Team findTeam = em.find(Team.class, team.getId());  //1차 캐시
-            List<Member> members = findTeam.getMembers();
-            /*
-                List에 값을 세팅하지 않아도 호출됨.
-             */
-
-            for (Member m : members){
-                System.out.println("m = " + m.getUsername());
-            }
+//            Team findTeam = em.find(Team.class, team.getId());  //1차 캐시
+//            List<Member> members = findTeam.getMembers();
+//            /*
+//                List에 값을 세팅하지 않아도 호출됨.
+//             */
+//
+//            for (Member m : members){
+//                System.out.println("m = " + m.getUsername());
+//            }
 
             tx.commit();
         } catch (Exception e){

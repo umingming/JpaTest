@@ -1,6 +1,8 @@
 package com.ex;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
     변수는 카멜을 쓰나, db는 언더스코어를 사용하므로 애매한 거만 컬럼 어노테이션으로 매핑하기
@@ -23,6 +25,14 @@ public class Member {
     @ManyToOne                 //멤버 입장에서 many고 team은 one이기 때문, 생각을 해라 하나의 팀에 여러 멤버가 있잖음.
     @JoinColumn(name = "TEAM_ID")            //멤버테이블의 컬럼과 매핑해야 함. 멤버 테이블엔 TEAM_ID가 있겠지? 그걸 적는 거임.
     private Team team;     //어노테이션 매핑을 안 하면 에러남. JPA한테 관계에 대한 정보를 줘야하기 때문.
+
+    @ManyToMany
+    @JoinTable(name = "MEMBER_PRODUCT") //테이블명
+    private List<Product> products = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
 
     public Team getTeam() {
         return team;

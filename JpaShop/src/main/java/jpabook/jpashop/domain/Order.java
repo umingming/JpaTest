@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Entity
 @Table(name = "ORDERS")   //ORDER 예약어인 DB가 있어서
 public class Order {
@@ -14,11 +16,11 @@ public class Order {
 //    @Column(name = "MEMBER_ID")
 //    private Long memberId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;      //가급적이면 단방향 매핑이 좋다.
 
-    @OneToMany(mappedBy = "order")    //OrderItem의 order
+    @OneToMany(mappedBy = "order", cascade = ALL)    //OrderItem의 order
     private List<OrderItem> orderItems = new ArrayList<>();
 
     /*
@@ -29,7 +31,7 @@ public class Order {
     @Enumerated(EnumType.STRING)    //Enum 타입은 항상 String!
     private OrderStatus status;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = ALL)
     @JoinColumn(name = "DELEVERY_ID")
     private Delivery delivery;
 

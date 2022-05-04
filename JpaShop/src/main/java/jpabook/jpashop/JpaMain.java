@@ -21,38 +21,6 @@ public class JpaMain {
         tx.begin();
 
         try {
-            /*
-                주문한 회원 찾기
-                Order order = em.find(Order.class, 1L);
-                Long memberId = order.getMemberId();
-                Member member = em.find(Member.class, memberId);
-                -> 객체지향적이지 않음! 객체는 한 번에 찾아야되는데, 식별자(getter)가 있으면 맥이 끊김. !관계형DB!에 맞춘 설계임.
-                Member member = order.getMember();
-                -> 객체는 참조 그래프로 쭉쭉 찾아야 함!.
-
-                데이터 중심 설계의 문제점
-                -현재 방식은 객체 설계를 테이블 설계에 맞춘 방식
-                -테이블의 외래키를 객체에 그대로 가져옴
-                -객체 그래프 탐색이 불가능
-                -참조가 없으므로 UML도 잘못됨.
-                => 이 문제들을 연관 관계 매핑으로 해결할 수 있음! 짱
-             */
-//            Member member = new Member();
-//            member.setName("유밍3");
-//            em.persist(member);
-
-//            Order order = new Order();
-//            order.addOrderItem(new OrderItem());
-//            em.persist(order);
-            /*
-                양방향 연관 관계는 개발상의 편의를 위해서임.
-                단방향으로 다 된다!
-                Order order = new Order();
-                em.persist(order);
-                OrderItem orderItem = new OrderItem();
-                orderItem.setOrder(order);
-                em.persist(orderItem);
-             */
             Movie movie = new Movie();
             movie.setName("바람과 사라져라");
             em.persist(movie);

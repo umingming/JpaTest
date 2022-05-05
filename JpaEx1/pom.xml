@@ -35,7 +35,7 @@
             <version>2.4.0-b180830.0359</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6 -->
+        <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6 오라클 -->
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc6</artifactId>

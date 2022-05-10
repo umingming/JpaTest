@@ -1,36 +1,14 @@
-package com.ex;
+package helloJpa;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.time.LocalDateTime;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
-/*
-    임베디드 타입과 테이블 매핑
-    - 임베디드 타입은 엔티티의 값일 뿐임.
-    - 임베디드 타입을 사용하기 전과 후에 매핑하는 테이블 같음.
-    - 객체와 테이블을 아주 세밀하게 매핑하는 것이 가능함.
-    - 잘 설계한 ORM 애플리케이션은 매핑한 테이블의 수보다 클래스의 수가 더 많음.
- */
-
-/*
-    속성 재정의; AttributeOverride
-    한 엔티티에서 같은 값 타입을 사용하면?
-    컬럼 명이 중복됨.
-    여럿이면 @AttributeOverrides, 하나면 @AttributeOverride 사용해 컬럼명 속성 재정의 하는 것
-
-    @AttributeOverrides({
-        @AttributeOverride(name="city", column=@Column(name="WORK_CITY")),
-        @AttributeOverride(name="street", column=@Column(name="WORK_STREET")),
-        @AttributeOverride(name="zipcode", column=@Column(name="WORK_ZIPCODE"))
-    })
-*/
-/*
-    임베디드 타입과 null
-    임베디드 타입의 값이 null이면, 매핑한 컬럼 모두 null
- */
 public class JpaMain {
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
@@ -40,51 +18,150 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setUsername("member");
-            member.setAddress(new Address("A", "B", "C"));
-            member.getFavoriteFoods().add("치킨");
-            member.getFavoriteFoods().add("족발");
-            member.getFavoriteFoods().add("피자");
 
-            member.getAddressHistory().add(new Address("A", "B", "D"));
-            member.getAddressHistory().add(new Address("E", "B", "D"));
             /*
-                값 타입 컬렉션이 멤버 저장할 때 같이 저장됨.
-                본인의 생명 주기가 없어 address는 member에 의졶남.
+            String qlString = "select m from Member m where m.username like '%kim%'"; //단순 스트링 동적 쿼리 만들기 어려움
+            List<Member> result = em.createQuery(
+                    "select m from Member m where m.username like '%kim%'", //단순 스트링 동적 쿼리 만들기 어려움
+                    // qlString으로 걍 변수 사용할 수 있음. 당연.
+                    Member.class
+            ).getResultList();
+            */
+            // 마이바티스는 동적 쿼리를 편하게 짤 수 있는 장점이 있음.
+            /*
+                여기서 Member는 테이블이 아니라 엔티티 클래스를 지칭함. 그니까 클래스
              */
+            /*
+                실제 실행 sql
+                select
+                    member0_.MEMBER_ID as member_id1_9_,
+                    member0_.city as city2_9_,
+                    member0_.street as street3_9_,
+                    member0_.zipcode as zipcode4_9_,
+                    member0_.LOCKER_ID as locker_id8_9_,
+                    member0_.endDate as enddate5_9_,
+                    member0_.startDate as startdate6_9_,
+                    member0_.TEAM_ID as team_id9_9_,
+                    member0_.USERNAME as username7_9_
+                from
+                    Member member0_
+                where
+                    member0_.USERNAME like '%kim%'
+
+                JPQL 문법이 완전 똑같삼삼
+                여기서 m이란 멤버 엔티티 자체를 조회하란 의미임.
+               select
+                    m
+                from
+                    Member m
+                where
+                    m.username like '%kim%'
+             */
+            /*
+            for(Member member : result) {
+                System.out.println("member = " + member);
+            }
+
+             */
+
+            //크라이테리아 사용 준비
+            /*CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Member> query = cb.createQuery(Member.class);
+*/
+            //조회를 시작할 클래스인 루트 클래스
+  /*          Root<Member> m = query.from(Member.class);
+*/
+            //쿼리 생성
+
+  /*          CriteriaQuery<Member> cq = query.select(m).where(cb.equal(m.get("username"), "kim"));
+            List<Member> resultList = em.createQuery(cq).getResultList();
+*/
+            /*
+            select
+                generatedAlias0
+            from
+                Member as generatedAlias0
+            where
+                generatedAlias0.username=:param0
+             */
+
+            /*
+                select
+                    member0_.MEMBER_ID as member_id1_9_,
+                    member0_.city as city2_9_,
+                    member0_.street as street3_9_,
+                    member0_.zipcode as zipcode4_9_,
+                    member0_.LOCKER_ID as locker_id8_9_,
+                    member0_.endDate as enddate5_9_,
+                    member0_.startDate as startdate6_9_,
+                    member0_.TEAM_ID as team_id9_9_,
+                    member0_.USERNAME as username7_9_
+                from
+                    Member member0_
+                where
+                    member0_.USERNAME=?
+             */
+//
+//            List<Member> list = query.selectFrom(m)
+//                                     .where(m.get.gt(18))
+//                                     .orderBy(m.name.desc())
+//                                     .fetch();
+
+            /*
+            네이티브 쿼리
+            String sql = "SELECT ID, AGE, TEAM_ID, NAME FROM MEMBER WHERE NAME = 'KIM'";
+            List<Member> resultList = em.createNativeQuery(sql, Member.class).getResultList();
+            */
+
+            /*
+                영속성 컨텍스트는 플러시가 되어야 JPA에 영속됨.
+             */
+
+/*
+            Member member = new Member();
+            member.setUsername("member1");
+            em.persist(member);
+            List<Member> resultList = em.createNativeQuery("select MEMBER_ID, city, street, zipcode, USERNAME from MEMBER", Member.class)
+                                        .getResultList();
+            for (Member member1 : resultList){
+                System.out.println("member1 = " + member1);
+            }
+*/
+
+            /* 네이티브 sql 동적 쿼리
+                select
+                    MEMBER_ID,
+                    city,
+                    street,
+                    zipcode,
+                    USERNAME
+                from
+                    MEMBER
+                member1 = helloJpa.Member{id=1, username='member1', team=null}
+             */
+            /*
+
+            Member member = new Member();
+            member.setUsername("member1");
             em.persist(member);
 
-            em.flush();
-            em.clear();
-            System.out.println("=================");
-            em.find(Member.class, member.getId());
-            System.out.println("=================");
+            em.flush(); // 강제로 플러쉬해야
+            conn.executeQuery("select * from member"); //아래 코드가 실행됨!
+            for (Member member1 : resultList){
+                System.out.println("member1 = " + member1);
+            }
 
-            /*
-                값 타입 컬렉션은 지연 로딩 전략 사용해 조회함.
              */
-
-            Member findMember = em.find(Member.class, member.getId());
-//            findMember.getAddress().setCity("newCity");
-            Address a = findMember.getAddress();
-            findMember.setAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
-            findMember.getFavoriteFoods().remove("치킨");
-            findMember.getFavoriteFoods().add("한식");
-            /*
-                마치 영속성 전이처럼 관리할 수 있음.
-             */
-            findMember.getAddressHistory().remove(new Address("newCity", a.getStreet(), a.getZipcode()));
-
-
-
 
             tx.commit();
-        } catch (Exception e){
+        } catch (Exception e) {
             tx.rollback();
+            e.printStackTrace();
         } finally {
             em.close();
         }
+
         emf.close();
+
     }
 }

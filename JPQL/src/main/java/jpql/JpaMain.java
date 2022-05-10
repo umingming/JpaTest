@@ -1,6 +1,7 @@
 package jpql;
 
 import javax.persistence.*;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -15,39 +16,60 @@ public class JpaMain {
             member.setUsername("member1");
             member.setAge(10);
             em.persist(member);
+
+            Member member2 = new Member();
+            member2.setUsername("member2");
+            member2.setAge(30);
+            em.persist(member2);
+/*
+
+            List<Member> result = em.createQuery("select m from Member m", Member.class)
+                                    .getResultList();
+            //m이 엔티티니까 result는 엔티티들이 반환됨. 엔티티 프로젝션이란 건, 이 테이블 내 엔티티들이 전부 영속성 컨텍스트에 저장이되고,
+            //관리할 수 있다는 뜻임.
+
+            Member foundMember = result.get(0);
+            foundMember.setAge(20);
+*/
+//            List<Team> result = em.createQuery("select m.team from Member m", Team.class)
+//                            .getResultList();
+//
+            //멤버를 찾으나, 팀을 반환하므로 팀클래스로 인자를 설정함.
+            //쿼리를 이런 식으로 쓰면 안 돼. 실제 sql 쿼리랑 최대한 비슷하게 작성해야 함. 묵시적 조인
+
+//            List<Team> result = em.createQuery("select t from Member m join m.team t", Team.class)
+//                                  .getResultList();
+            //조인은 이처럼 명시적으로 하는 게 조음. 명시적 조인
+
+
+            /*
+                select
+                    team1_.id as id1_3_,
+                    team1_.name as name2_3_
+                from
+                    Member member0_
+                inner join
+                    Team team1_
+                        on member0_.TEAM_ID=team1_.id
+                실제 join 쿼리가 날라감.
+             */
+
+//            em.createQuery("select o.address from Order o", Address.class).getResultList();
+            //address 칼럼 안 되고 o.붙여서 사용함.
+
+//            List resultList = em.createQuery("select m.username, m.age from Member m").getResultList();
+
+            /*
+                프로젝션 여러 값 조회
+                1. Qu
+             */
+
+            List<MemberDTO> result = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m")
+                                        .getResultList();
+            //생성자를 통해 값 호출
+            MemberDTO memberDTO = result.get(0);
+
             tx.commit();
-            //TypedQuery<Member> query = em.createQuery("select m from Member m where m.id = 10", Member.class);
-            /*
-            // 파라미터 관련
-            TypedQuery<Member> query = em.createQuery("select m from Member m where m.username = :username", Member.class);
-            query.setParameter("username", "member1");
-
-            Member result = query.getSingleResult();  //값이 하나면 그냥 싱글리저트 사용할 수 있어. 이럴 땐 where 절로 쿼리 걸어줘야 함.
-            System.out.println(result.getUsername());
-
-            */
-
-            //이름 기준 파라미터 바인딩이 권장됨.
-            Member result1 = em.createQuery("select m from Member m where m.username = :username", Member.class)
-                    .setParameter("username", "member1")
-                    .getSingleResult();
-
-            //위치 기준 파라미터 바인딩
-            Member result2 = em.createQuery("select m from Member m where m.username = ?1", Member.class)
-                    .setParameter(1, "member1")
-                    .getSingleResult();
-
-
-
-            /*
-                getResultList(); 결과가 하나 이상일 때, 리스트 반환함. 결과가 없으면 빈 리스트 반환
-                getSingleResult(); 결과가 무조건 하나여야 함. 단일 객체 반환. 값이 무조건 있을 때 사용해야 함. 아니면 에러남.
-             */
-
-            /*
-                파라미터 바인딩; 이름 기준/ 위치 기준
-             */
-
         } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();

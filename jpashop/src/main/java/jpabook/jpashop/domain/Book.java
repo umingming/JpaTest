@@ -1,9 +1,9 @@
 package jpabook.jpashop.domain;
 
+import jpabook.jpashop.jpashop.domain.Item;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 

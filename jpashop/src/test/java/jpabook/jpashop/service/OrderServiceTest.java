@@ -3,7 +3,6 @@ package jpabook.jpashop.service;
 import jpabook.jpashop.domain.*;
 import jpabook.jpashop.exception.NotEnoughStockException;
 import jpabook.jpashop.repository.OrderRepository;
-import jpabook.jpashop.service.OrderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +35,11 @@ public class OrderServiceTest {
 
         //when
         Long orderId = orderService.order(member.getId(), book.getId(), orderCount);
-        
+
         //then
         Order getOrder = orderRepository.findOne(orderId);
         assertEquals("상품 주문 시 상태는 ORDER", OrderStatus.ORDER, getOrder.getStatus());
-        assertEquals("주문 상품 종류 정확해야 한다.", 1, getOrder.getOrderItemList().size());
+        assertEquals("주문 상품 종류 정확해야 한다.", 1, getOrder.getOrderItems().size());
         assertEquals("주문 가격은 가격 * 수량이다.", 10000 * orderCount, getOrder.getTotalPrice());
         assertEquals("주문 수량만큼 재고가 줄어야 한다.", 8, book.getStockQuantity());
     }
@@ -70,7 +69,7 @@ public class OrderServiceTest {
         //given
         Member member = createMember();
         Item item = createBook("시골 JPA", 10000, 10);
-        int orderCount = 10;
+        int orderCount = 11;
 
         //when
         orderService.order(member.getId(), item.getId(), orderCount);

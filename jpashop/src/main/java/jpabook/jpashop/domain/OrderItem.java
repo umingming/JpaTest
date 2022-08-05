@@ -1,7 +1,5 @@
 package jpabook.jpashop.domain;
 
-import jpabook.jpashop.jpashop.domain.Item;
-import jpabook.jpashop.jpashop.domain.Order;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +17,7 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
-    private jpabook.jpashop.jpashop.domain.Item item;
+    private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
